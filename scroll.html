@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scroll</title>
+    <style>
+        #body{
+            margin: 0;
+            padding: 0;
+        }
+        .body {
+            height: 3048px;
+        }
+        .logo {
+            /*width: 500px;*/
+            flex: none;
+            object-fit: cover;
+            width: 100%;
+            position: fixed;
+
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+
+        }
+        p{
+            font-size: 30px;
+        }
+    </style>
+    <script>
+        function initScroller() {
+            // distance over which zoom effect takes place
+            var maxScrollDistance = 1000;
+            // width at maximum zoom out (i.e. when window has scrolled maxScrollDistance)
+            var widthAtMax = window.innerWidth;
+
+            // calculate diff and how many pixels to zoom per pixel scrolled
+            var widthDiff = 0;
+            var pixelsPerScroll = 0;
+
+            // Get the real width of the logo image
+            var theLogo = document.getElementById("thelogo");
+            var theContent = document.getElementById("content");
+            var imgWidth = theLogo.naturalWidth;
+            var imgHeight = theLogo.naturalHeight;
+
+            // set to window height if larger
+            maxScrollDistance = Math.min(maxScrollDistance, window.innerHeight);
+
+            // calculate diff and how many pixels to zoom per pixel scrolled
+            widthDiff = imgWidth - widthAtMax;
+            pixelsPerScroll = (widthDiff / maxScrollDistance);
+
+            theLogo.style.width = imgWidth + "px";
+
+            console.log(maxScrollDistance, window.innerHeight, widthDiff, pixelsPerScroll);
+
+            document.addEventListener('scroll', function() {
+                console.log('scrolling');
+            var dsoctop = document.all ? iebody.scrollTop : pageYOffset;
+            // the currently scrolled-to position - max-out at maxScrollDistance
+            var scrollTopPos = Math.min(dsoctop, maxScrollDistance);
+
+            // how many pixels to adjust by
+            var scrollChangePx = Math.floor(scrollTopPos * pixelsPerScroll);
+
+            // calculate the new width
+            var zoomedWidth = imgWidth - scrollChangePx;
+            var zoomedHeight = (imgHeight / imgWidth) * zoomedWidth;
+
+
+            if (dsoctop > maxScrollDistance) {
+                // after the max scroll
+                theLogo.style.paddingTop = maxScrollDistance + 'px';
+                theLogo.style.position = 'relative';
+                theLogo.style.height = '100%';
+                theContent.style.paddingTop = 0 + 'px';
+                console.log(zoomedHeight, dsoctop);
+
+            } else {
+                // set the width
+                theLogo.style.position = 'fixed';
+                theLogo.style.paddingTop = 0 + 'px';
+                theLogo.style.width = zoomedWidth + "px";
+                theLogo.style.height = '';
+                theContent.style.paddingTop = zoomedHeight + dsoctop + 'px';
+
+            }
+
+            console.log(zoomedWidth, document.getElementById('body').scrollTop, maxScrollDistance, scrollChangePx, dsoctop);
+        });
+
+        }
+
+    </script>
+</head>
+<body id="body" onload="initScroller(this)">
+
+<div class="header" id="header">
+    <img id="thelogo" class="logo" src="https://dummyimage.com/2000x1000/000/fff.png" />
+</div>
+<div class="body" id="content">
+    <p>Hello World</p>
+
+</div>
+
+</body>
+</html>
